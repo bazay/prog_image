@@ -6,14 +6,11 @@ ruby '2.4.1'
 gem 'configatron'
 gem 'grape'
 gem 'puma', '~> 3.11'
-gem 'rack-timer' # Check for slow, unnecessary middleware
-gem 'rails', '~> 5.2.0'
+gem 'rack'
+gem 'require_all'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
-
-# Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
 
 group :development, :test do
   gem 'pry'
@@ -26,6 +23,7 @@ group :development do
 end
 
 group :test do
-  gem 'rspec-its', require: false
-  gem 'rspec-rails', require: false
+  gem 'rack-test'
+  gem 'rspec'
+  gem 'rspec-its'
 end

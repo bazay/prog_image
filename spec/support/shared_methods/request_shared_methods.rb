@@ -1,13 +1,17 @@
 module RequestSharedMethods
+  def app
+    ProgImage::ApplicationApi
+  end
+
   def dispatch(method: :get, path: '/', params: {})
     send(method, path, params)
   end
 
-  def build_api_path(version: 'v1.0', path: '')
-    "/api/#{version}" + path
+  def decoded_json_body(request)
+    JSON.parse(request.body)
   end
 
-  def decoded_json_response(text = response.body)
-    ActiveSupport::JSON.decode text
+  def build_api_path(version: 'v1.0', path: '')
+    "/api/#{version}" + path
   end
 end

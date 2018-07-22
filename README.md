@@ -1,27 +1,18 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Application Information
 
-Things you may want to cover:
+* Ruby version: v2.4.1
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
+* System dependencies: See `Gemfile.lock (DEPENDENCIES)`
 
 * How to run the test suite
+`bundle exec rspec && rubocop`
 
-* Services (job queues, cache servers, search engines, etc.)
+* Services (job queues, cache servers, search engines, etc.): TODO
 
 * Deployment instructions
-
-* ...
+`bundle exec puma config.ru`
 
 ## Performance
 
@@ -58,89 +49,89 @@ Document Path:          /api/version
 Document Length:        48 bytes
 
 Concurrency Level:      5
-Time taken for tests:   0.258 seconds
+Time taken for tests:   0.241 seconds
 Complete requests:      100
 Failed requests:        0
 Total transferred:      28800 bytes
 HTML transferred:       4800 bytes
-Requests per second:    387.93 [#/sec] (mean)
-Time per request:       12.889 [ms] (mean)
-Time per request:       2.578 [ms] (mean, across all concurrent requests)
-Transfer rate:          109.10 [Kbytes/sec] received
+Requests per second:    415.59 [#/sec] (mean)
+Time per request:       12.031 [ms] (mean)
+Time per request:       2.406 [ms] (mean, across all concurrent requests)
+Transfer rate:          116.89 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.1      0       1
-Processing:     5   13   5.3     11      30
-Waiting:        5   11   4.1     10      25
-Total:          5   13   5.3     11      30
+Processing:     4   12   5.2     11      31
+Waiting:        4   11   4.5     10      29
+Total:          4   12   5.2     11      31
 
 Percentage of the requests served within a certain time (ms)
   50%     11
-  66%     13
-  75%     15
-  80%     16
-  90%     21
-  95%     27
-  98%     29
-  99%     30
- 100%     30 (longest request)
+  66%     12
+  75%     14
+  80%     14
+  90%     17
+  95%     26
+  98%     30
+  99%     31
+ 100%     31 (longest request)
  ```
 
 #### Grape
 ```
-$ rackup
-Loaded in: 1.048874s
+$ puma config.ru
 Puma starting in single mode...
 * Version 3.12.0 (ruby 2.4.1-p111), codename: Llamas in Pajamas
-* Min threads: 5, max threads: 5
+* Min threads: 0, max threads: 16
 * Environment: development
-* Listening on tcp://localhost:9292
+Loaded in: 1.039307s
+* Listening on tcp://0.0.0.0:9292
 Use Ctrl-C to stop
 ```
 */api/version*
 ```
-$ ab -n 100 -c 5 "http://localhost:9292/api/version"
+$ ab -n 100 -c 5 "127.0.0.1:9292/api/version"
 This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
 
-Benchmarking localhost (be patient).....done
+Benchmarking 127.0.0.1 (be patient).....done
 
 
 Server Software:
-Server Hostname:        localhost
+Server Hostname:        127.0.0.1
 Server Port:            9292
 
 Document Path:          /api/version
 Document Length:        48 bytes
 
 Concurrency Level:      5
-Time taken for tests:   0.229 seconds
+Time taken for tests:   0.071 seconds
 Complete requests:      100
 Failed requests:        0
 Total transferred:      11900 bytes
 HTML transferred:       4800 bytes
-Requests per second:    437.50 [#/sec] (mean)
-Time per request:       11.429 [ms] (mean)
-Time per request:       2.286 [ms] (mean, across all concurrent requests)
-Transfer rate:          50.84 [Kbytes/sec] received
+Requests per second:    1417.62 [#/sec] (mean)
+Time per request:       3.527 [ms] (mean)
+Time per request:       0.705 [ms] (mean, across all concurrent requests)
+Transfer rate:          164.74 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.2      0       1
-Processing:     3   11  10.3      9      53
-Waiting:        2    9  10.2      7      52
-Total:          3   11  10.3      9      54
+Processing:     1    3   1.4      3      10
+Waiting:        1    2   1.1      2       6
+Total:          1    3   1.5      3      10
 
 Percentage of the requests served within a certain time (ms)
-  50%      9
-  66%     11
-  75%     12
-  80%     13
-  90%     15
-  95%     53
-  98%     54
-  99%     54
- 100%     54 (longest request)
- ```
+  50%      3
+  66%      3
+  75%      4
+  80%      4
+  90%      6
+  95%      6
+  98%      8
+  99%     10
+ 100%     10 (longest request)
+```

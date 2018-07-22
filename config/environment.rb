@@ -1,5 +1,4 @@
-# Load the Rails application.
-require_relative 'application'
+require 'rubygems'
+require 'bundler'
 
-# Initialize the Rails application.
-Rails.application.initialize!
+Bundler.require(:default, ProgImage.env)
