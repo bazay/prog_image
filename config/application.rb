@@ -4,15 +4,15 @@ require 'rails'
 # Pick the frameworks you want:
 # require 'active_model/railtie'
 # require 'active_job/railtie'
-require 'active_record/railtie'
-require 'active_storage/engine'
-# require 'action_controller/railtie'
+# require 'active_record/railtie'
+# require 'active_storage/engine'
+require 'action_controller/railtie'
 # require 'action_mailer/railtie'
 # require 'action_view/railtie'
 # require 'action_cable/engine'
 # require 'sprockets/railtie'
 # require 'rails/test_unit/railtie'
-require 'rack-timer'
+# require 'rack-timer'
 
 Bundler.require(*Rails.groups)
 
@@ -29,6 +29,8 @@ module ProgImage
     config.autoload_paths += Dir[Rails.root.join('app/api/*')]
 
     # Custom middleware
-    config.middleware.use RackTimer::Middleware
+    # config.middleware.use RackTimer::Middleware
   end
 end
+
+require 'application_versioning'

@@ -7,6 +7,9 @@ inherit_from:
 Metrics/LineLength:
   Max: 120
 
+Style/ClassAndModuleChildren:
+  Exclude:
+    - app/api/api/**/*.rb
 Style/Documentation:
   Enabled: false
 Style/FrozenStringLiteralComment:

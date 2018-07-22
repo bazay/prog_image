@@ -3,6 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.4.1'
 
+gem 'configatron'
+gem 'grape'
 gem 'puma', '~> 3.11'
 gem 'rack-timer' # Check for slow, unnecessary middleware
 gem 'rails', '~> 5.2.0'
@@ -18,8 +20,12 @@ group :development, :test do
 end
 
 group :development do
-  gem 'rspec'
   gem 'rubocop'
   gem 'rubocop-rspec'
   gem 'spring'
+end
+
+group :test do
+  gem 'rspec-its', require: false
+  gem 'rspec-rails', require: false
 end
