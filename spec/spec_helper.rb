@@ -9,6 +9,7 @@ RSpec.configure do |config|
   end
 
   config.include Rack::Test::Methods
+  config.include FileSharedMethods
   config.include RequestSharedMethods, type: :request
 
   config.shared_context_metadata_behavior = :apply_to_host_groups

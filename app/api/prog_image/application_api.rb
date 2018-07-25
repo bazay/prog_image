@@ -5,7 +5,9 @@ module ProgImage
     default_format :json
     prefix :api
 
-    helpers ProgImage::ApiResponseHelper
+    helpers ProgImage::Helpers::ApiResponseHelper
+
+    mount Api::V10
 
     desc 'Application and API version information'
     get :version do

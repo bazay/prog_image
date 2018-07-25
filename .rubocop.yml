@@ -7,9 +7,14 @@ inherit_from:
 Metrics/LineLength:
   Max: 120
 
+RSpec/AnyInstance:
+  Enabled: false
+RSpec/NestedGroups:
+  Max: 5
+
 Style/ClassAndModuleChildren:
   Exclude:
-    - app/api/api/**/*.rb
+    - app/api/prog_image/api/**/*.rb
 Style/Documentation:
   Enabled: false
 Style/FrozenStringLiteralComment:

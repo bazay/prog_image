@@ -11,10 +11,8 @@
 /log/*
 /tmp/*
 
-# Ignore uploaded files in development
-/storage/*
+# Don't store application variables on GitHub.
+# Ironically we store application.sample.yml which should only contain dummy data, but doesn't...
+/config/application.yml
 
-.byebug_history
-
-# Ignore master key for decrypting credentials and more.
-/config/master.key
+.DS_Store

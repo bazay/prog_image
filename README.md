@@ -1,24 +1,151 @@
-# README
+# ProgImage
 
 ## Application Information
 
-* Ruby version: v2.4.1
+* Ruby version:
+```
+v2.4.1
+```
 
-* System dependencies: See `Gemfile.lock (DEPENDENCIES)`
+* System dependencies:
+```
+Gemfile.lock
+```
 
 * How to run the test suite
-`bundle exec rspec && rubocop`
-
-* Services (job queues, cache servers, search engines, etc.): TODO
+```
+bundle exec rspec && rubocop
+```
 
 * Deployment instructions
-`bundle exec puma config.ru`
+```
+bundle exec puma config.ru
+```
 
-## Performance
+
+## Reference
+
+### API
+
+The API is written in [Grape](https://github.com/ruby-grape/grape), a rack-based framework that provides a decent level of boilerplate code whilst remaining [performant](#benchmarking).
+
+**POST /api/v1.0/images**
+
+This endpoint allows images to be uploaded and accepts the following parameters:
+
+* `image_file` (File) - The multipart file to upload
+
+This endpoint returns a JSON object with the following structure:
+```
+{
+  "key": "4ae870d1-5a1a-4dd5-b1c6-b813582dbc45/example.png"
+}
+```
+
+**GET /api/v1.0/images/view**
+
+This endpoint images to be retrieved and accepts the following parameters:
+
+* `key` (String) - The key provided in the aforementioned endpoint
+
+This endpoint returns a JSON object with the following structure:
+```
+{
+  "key": "4ae870d1-5a1a-4dd5-b1c6-b813582dbc45/example.png",
+  "public_url": "http://s3.region.com/bucket-name/4ae870d1-5a1a-4dd5-b1c6-b813582dbc45/example.png"
+}
+```
+
+### Forms
+
+#### ImageUploadForm
+
+This form ensures that validations are performed on the file uploaded. 
+The two primary validations are:
+
+* The filename for the file is valid file format (i.e. includes an extension) - however this could be disabled to allow images without extensions in the filename...
+* The uploaded file is an image. 
+
+Image types are not limited i.e. the upload is checked using `MiniMagick` gem which supports a great deal of image types.
+
+### Libraries
+
+#### Connectors
+
+The purpose of connectors are to act as interfaces to other services. There can be many and are designed to be interchangable where necessary. They are isolated and therefore do not contain or perform any logic related to the `ProgImage` application.
+
+**Connectors::Aws::S3Connector**
+
+This connector is the method of interacting with the AWS S3 storage. It supports the uploading and the retrieval of files to S3 using conventional methods.
+
+Interestingly, S3 supports the concept of *presigning posts*. In short, the server receives information about a file to be uploaded to S3 and rather than facilitating that file upload using server resource, it creates temporary permission for the client to perform the upload directly to S3 themselves. An interesting way to potentially free up server resource.
+
+### Services
+
+#### FileFetcher
+
+This service is responsible for retrieving a file from storage.
+It has the following public methods:
+
+**#initialize(key)**
+
+**#fetch**
+
+Fetches the file from storage using `key` passed in on `#initialize` and returns an instance of `Aws::S3::Object`.
+
+**#connector** (private)
+
+The connector used to connect to the storage service.
+
+#### FileUploader
+
+This service is responsible for uploading an image to storage.
+It has the following public methods:
+
+**#initialize(file)**
+
+**#upload**
+
+Uploads the file to storage using `file` passed in on `#initialize` and returns `key` (success) or `false` (failure).
+
+**#build_key_path** (private)
+
+Generates a unique key by combining a uuid folder name with the original filename within that folder. This allows to images with the same filename to be uploaded to the service without issue. An example folder structure:
+```
+/bucket-name/4ae870d1-5a1a-4dd5-b1c6-b813582dbc45/example.png
+```
+
+**#connector** (private)
+
+The connector used to connect to the storage service.
+
+#### ImageHandler
+
+This service is responsible for handling basic image file operations using the `MiniMagick` gem.
+
+**#initialize(image_file)**
+
+**#image_file**
+
+Returns an instance of `MiniMagick::Image` if `image_file` is a valid image file, otherwise returns `nil`.
+
+**#image?**
+
+Returns a `TrueClass` if `image_file` is a valid image file, otherwise returns `FalseClass`.
+
+
+## Benchmarking
 
 Measuring performance across Ruby frameworks (Grape, Rails/Grape) tested on Macbook Pro 2016 3.3GHz i7 16GB DDR3 using `ApacheBench`.
 
-#### Rails/Grape
+#### TL;DR
+
+A Rack-only server is significantly faster than a Rails/Grape API-only framework. This is multiplied significantly if Puma is run in clustered mode, seeing request times as low as 4ms per transaction.
+
+This result is due mainly to the additional middlewares and gems included in Rails, many of which are not required for this particular use-case.
+
+### Rails/Grape
+
 ```
 $ rails s
 => Booting Puma
@@ -31,7 +158,9 @@ Puma starting in single mode...
 * Environment: development
 * Listening on tcp://0.0.0.0:3000
 ```
-*/api/version*
+
+**GET /api/version**
+
 ```
 $ ab -n 100 -c 5 "http://127.0.0.1:3000/api/version"
 This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
@@ -78,7 +207,8 @@ Percentage of the requests served within a certain time (ms)
  100%     31 (longest request)
  ```
 
-#### Grape
+### Grape
+
 ```
 $ puma config.ru
 Puma starting in single mode...
@@ -89,7 +219,9 @@ Loaded in: 1.039307s
 * Listening on tcp://0.0.0.0:9292
 Use Ctrl-C to stop
 ```
-*/api/version*
+
+**GET /api/version**
+
 ```
 $ ab -n 100 -c 5 "127.0.0.1:9292/api/version"
 This is ApacheBench, Version 2.3 <$Revision: 1807734 $>

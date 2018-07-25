@@ -3,6 +3,7 @@
 ### Features
 
 * Add Grape API Framework
+* Add image upload and retrieval endpoints
 
 #### Technical Improvements
 

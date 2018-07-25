@@ -1,0 +1,10 @@
+en:
+  activemodel:
+    errors:
+      models:
+        prog_image/image_upload_form:
+          attributes:
+            filename:
+              invalid: 'Filename is not a valid format'
+            base:
+              invalid: 'File is not an image or is unsupported'
