@@ -1,57 +1,30 @@
 module ProgImage
   module Api
     class V10::Images < Grape::API
-      helpers do
-        def image_upload_form
-          @image_upload_form ||= ::ProgImage::ImageUploadForm.new \
-            params[:image_file].slice(*permitted_image_file_params)
-        end
-
-        def fetched_image
-          @fetched_image ||= file_fetcher.fetch
-        end
-
-        def formatted_fetched_image
-          { key: file_fetcher.key, public_url: fetched_image.public_url }
-        end
-
-        def file_fetcher
-          @file_fetcher ||= ProgImage::FileFetcher.new(params[:key])
-        end
-
-        def formatted_image_key(response)
-          { key: response }
-        end
-
-        def formatted_image(response)
-          { key: params[:key], public_url: response.public_url }
-        end
-
-        def permitted_image_file_params
-          ::ProgImage::ImageUploadForm.permitted_params
-        end
-      end
+      helpers ProgImage::Helpers::ImagesHelper
 
       namespace :images do
-        desc 'Upload an image'
+        desc 'Upload an image to storage'
         params do
           requires :image_file, type: File, desc: 'The multipart file to upload'
         end
         post '/' do
           if image_upload_form.persist
-            present image_upload_form, with: ProgImage::Entities::ImageKey
+            present image_upload_form, with: ProgImage::Entities::Image
           else
             say_unprocessable_entity_for image_upload_form
           end
         end
 
-        desc 'View an image'
+        desc 'View a stored image'
         params do
           requires :key, type: String, desc: 'The key returned when performing POST request for an image'
+          optional :extension, type: String,
+            desc: "The extension of the image extension you want to convert to, e.g. 'PNG', 'JPG', 'TIFF', etc"
         end
-        get :view do
-          if fetched_image.exists?
-            present fetched_image, with: ProgImage::Entities::Image
+        get '/' do
+          if image_key_exists?
+            perform_image_conversion!
           else
             say_not_found
           end

@@ -4,6 +4,7 @@ RSpec.describe ProgImage::ImageUploadForm do
   let(:params) { uploaded_image_file }
 
   include_context 'with file for upload'
+  include_context 'with aws s3 connector'
 
   describe '#valid?' do
     it { is_expected.to be_valid }

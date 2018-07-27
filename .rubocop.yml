@@ -4,9 +4,13 @@ require:
 inherit_from:
   - .rubocop_todo.yml
 
+Layout/AlignHash:
+  Enabled: false
+
 Metrics/BlockLength:
   Exclude:
     - lib/tasks/prog_image_tasks.rake
+    - spec/**/*.rb
 Metrics/LineLength:
   Max: 120
 

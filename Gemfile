@@ -9,7 +9,8 @@ gem 'configatron'
 gem 'figaro'
 gem 'grape'
 gem 'grape-entity'
-gem 'mini_magick', '~> 4.8'
+gem 'mimemagic', require: false
+gem 'mini_magick', '~> 4.8', require: false
 gem 'puma', '~> 3.11'
 gem 'rack'
 gem 'require_all'

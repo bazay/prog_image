@@ -7,11 +7,11 @@ module ProgImage
     end
 
     def root
-      Pathname.new File.dirname(File.expand_path(__dir__))
+      Pathname.new ::File.dirname(::File.expand_path(__dir__))
     end
 
     def version
-      @version ||= File.read(ProgImage.root.join('VERSION')).chomp.freeze
+      @version ||= ::File.read(ProgImage.root.join('VERSION')).chomp.freeze
     end
   end
 end
