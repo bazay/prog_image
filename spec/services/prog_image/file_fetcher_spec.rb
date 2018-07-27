@@ -6,9 +6,21 @@ RSpec.describe ProgImage::FileFetcher do
 
   its(:key) { is_expected.to eq key }
 
-  describe '#fetch' do
-    subject { service.fetch }
+  describe '#fetch_file' do
+    subject { service.fetch_file }
 
-    its(:public_url) { is_expected.to include key }
+    it { is_expected.to be_kind_of File }
+  end
+
+  describe '#fetch_file_url' do
+    subject { service.fetch_file_url }
+
+    it { is_expected.to include key }
+  end
+
+  describe '#file_exists?' do
+    subject { service.file_exists? }
+
+    it { is_expected.to be true }
   end
 end

@@ -15,4 +15,8 @@ module FileSharedMethods
       'head' => ''
     }
   end
+
+  def non_image_extension
+    %w[TXT DOC XML HTML CSS JS EXE].sample
+  end
 end

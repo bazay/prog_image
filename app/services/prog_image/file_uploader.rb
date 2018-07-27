@@ -1,20 +1,20 @@
 module ProgImage
   class FileUploader
-    attr_reader :file, :key
+    attr_reader :file_attributes, :key
 
-    def initialize(file)
-      @file = file
-      @key = build_key_path(file)
+    def initialize(file_attributes)
+      @file_attributes = file_attributes
+      @key = build_key_path
     end
 
     def upload
-      connector.upload_file(file, key) ? key : false
+      connector.upload_file(file_attributes, key) ? key : false
     end
 
     private
 
-    def build_key_path(file)
-      "#{SecureRandom.uuid}/#{file[:filename]}"
+    def build_key_path
+      "#{SecureRandom.uuid}/#{@file_attributes[:filename]}"
     end
 
     def connector

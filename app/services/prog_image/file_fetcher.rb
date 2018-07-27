@@ -6,8 +6,16 @@ module ProgImage
       @key = key
     end
 
-    def fetch
+    def fetch_file
       connector.fetch_file(key)
+    end
+
+    def fetch_file_url
+      connector.fetch_file_url(key)
+    end
+
+    def file_exists?
+      connector.file_exists?(key)
     end
 
     private

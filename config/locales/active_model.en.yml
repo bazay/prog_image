@@ -8,3 +8,12 @@ en:
               invalid: 'Filename is not a valid format'
             base:
               invalid: 'File is not an image or is unsupported'
+        prog_image/image_convert_form:
+          attributes:
+            filename:
+              invalid: 'Filename is not a valid format'
+            base:
+              invalid: 'File is not an image or is unsupported'
+            format:
+              invalid: 'Format is not an image or is unsupported'
+              unchanged: 'Format will be unchanged'

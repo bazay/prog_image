@@ -7,6 +7,8 @@ module ProgImage
 
     helpers ProgImage::Helpers::ApiResponseHelper
 
+    include ErrorsHandling
+
     mount Api::V10
 
     desc 'Application and API version information'

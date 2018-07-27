@@ -17,6 +17,13 @@ module ProgImage
         say_unprocessable_entity
         present_form_errors form, Entities::Errors::UnprocessableEntity
       end
+
+      private
+
+      def present_form_errors(form, error_presenter)
+        form.errors.messages
+        present form, with: error_presenter
+      end
     end
   end
 end

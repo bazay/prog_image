@@ -51,7 +51,7 @@ The API is written in [Grape](https://github.com/ruby-grape/grape), a rack-based
 
 This endpoint allows images to be uploaded and accepts the following parameters:
 
-* `image_file` (File) - The multipart file to upload
+* `image_file` **(required)** (File) - The multipart file to upload
 
 This endpoint returns a JSON object with the following structure:
 ```
@@ -60,11 +60,12 @@ This endpoint returns a JSON object with the following structure:
 }
 ```
 
-**GET /api/v1.0/images/view**
+**GET /api/v1.0/images**
 
 This endpoint images to be retrieved and accepts the following parameters:
 
-* `key` (String) - The key provided in the aforementioned endpoint
+* `key` **(required)** (String) - The key returned when performing POST request for an image
+* `extension` *(optional)* (String) - The extension of the image extension you want to convert to, e.g. 'PNG', 'JPG', 'TIFF', etc
 
 This endpoint returns a JSON object with the following structure:
 ```
@@ -76,13 +77,23 @@ This endpoint returns a JSON object with the following structure:
 
 ### Forms
 
+#### ImageConvertForm
+
+This form ensures that validations are performed on the key attempting to be converted to new extension. 
+The two primary validations are:
+
+* `ensure_extension_is_different` - Checks the provided `extension` is different to the image type attempting to be converted. 
+* `ensure_extension_is_an_image` - Checks the provided `extension` is a valid image extension using `MimeMagic` gem. 
+
+Image types are not limited i.e. the upload is checked using `MiniMagick` gem which supports a great deal of image types.
+
 #### ImageUploadForm
 
 This form ensures that validations are performed on the file uploaded. 
 The two primary validations are:
 
-* The filename for the file is valid file format (i.e. includes an extension) - however this could be disabled to allow images without extensions in the filename...
-* The uploaded file is an image. 
+* `filename` - The filename for the file is valid file format (i.e. includes an extension) - however this could be disabled to allow images without extensions in the filename...
+* `ensure_file_is_an_image` - The uploaded file is an image. 
 
 Image types are not limited i.e. the upload is checked using `MiniMagick` gem which supports a great deal of image types.
 
@@ -94,9 +105,9 @@ The purpose of connectors are to act as interfaces to other services. There can 
 
 **Connectors::Aws::S3Connector**
 
-This connector is the method of interacting with the AWS S3 storage. It supports the uploading and the retrieval of files to S3 using conventional methods.
+This connector is the method of interacting with the AWS S3 storage. It supports the uploading and the retrieval of files and file information stored on S3.
 
-Interestingly, S3 supports the concept of *presigning posts*. In short, the server receives information about a file to be uploaded to S3 and rather than facilitating that file upload using server resource, it creates temporary permission for the client to perform the upload directly to S3 themselves. An interesting way to potentially free up server resource.
+*Interestingly, S3 supports the concept of *presigning posts*. In short, the server receives information about a file to be uploaded to S3 and rather than facilitating that file upload using server resource, it creates temporary permission for the client to perform the upload directly to S3 themselves. An interesting way to potentially free up server resource.*
 
 ### Services
 
@@ -139,7 +150,7 @@ The connector used to connect to the storage service.
 
 #### ImageHandler
 
-This service is responsible for handling basic image file operations using the `MiniMagick` gem.
+This service is responsible for handling image file operations using the `MiniMagick` and `MimeMagic` gems.
 
 **#initialize(image_file)**
 
@@ -150,6 +161,23 @@ Returns an instance of `MiniMagick::Image` if `image_file` is a valid image file
 **#image?**
 
 Returns a `TrueClass` if `image_file` is a valid image file, otherwise returns `FalseClass`.
+
+**#image_extension?(extension)**
+
+Returns a `TrueClass` if `extension` argument is a valid image file extension, otherwise returns `FalseClass`.
+
+**#different_extension?(extension)**
+
+Returns a `TrueClass` if `extension` argument is a different file extension to the temporary image file, otherwise returns `FalseClass`.
+
+**#convert_extension(extension)**
+
+Attempts to convert the `image_file` to the new extension. There are 3 expected outcomes:
+* If the extension is valid it converts the image and returns the `MiniMagick`-wrapped converted image
+* If the extension is the same as the image it just returns the original image
+* If the extension is not valid it returns `nil`.
+
+If for some reason the conversion fails, a custom error `ProgImage::Errors::ImageConversionError` is thrown and captured in the api layer and handled accordingly.
 
 
 ## Benchmarking
