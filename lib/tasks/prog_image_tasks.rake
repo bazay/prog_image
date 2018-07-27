@@ -1,4 +1,5 @@
 require 'yaml'
+require 'pathname'
 
 desc 'Tasks related to the application'
 namespace :prog_image do
@@ -46,5 +47,15 @@ namespace :prog_image do
     end
 
     Setup.execute
+  end
+
+  desc 'Start a rackup server'
+  task :server do
+    ROOT = Pathname.new File.expand_path('../../', __dir__)
+
+    Dir.chdir ROOT do
+      port = ENV['PORT'] || '9292'
+      system "bundle exec puma --port=#{port} config.ru"
+    end
   end
 end

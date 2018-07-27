@@ -5,6 +5,7 @@
 * Add Grape API Framework
 * Add image upload and retrieval endpoints
 * Extend retrieval endpoint to allow image extension
+* Add Docker option for deployment
 
 #### Technical Improvements
 
