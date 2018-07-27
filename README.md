@@ -36,8 +36,28 @@ bundle exec rspec && rubocop
 ```
 
 #### Deployment instructions
+
+**Puma**
+
 ```
 bundle exec puma config.ru
+```
+
+**Docker**
+
+First build an image from the Dockerfile with `prog-image-bb` to be the name of the Docker image:
+```
+docker build -t prog-image-bb .
+```
+
+Then you can run the image:
+```
+docker run -e "region=eu-west-1" \
+-e "AWS_ACCESS_KEY_ID=XXXXXXXXXXXX" \
+-e "AWS_ACCESS_KEY=XXXXXXXXXXX" \
+-e "AWS_BUCKET_NAME=prog-image-bb" \
+-e "AWS_REGION=eu-west-1" \
+-it -p 9292:9292 prog-image-bb
 ```
 
 
